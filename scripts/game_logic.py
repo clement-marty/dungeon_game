@@ -26,8 +26,10 @@ class GameLogic:
             
         def __init__(self, max_health: int = 100, max_energy: int = 100) -> None:
             self.position: list[int, int]
-            self._health = max_health
-            self._energy = max_energy
+            self.max_health = max_health
+            self.max_energy = max_energy
+            self._health = max_health - 20
+            self._energy = max_energy - 50
 
         def _move(self, direction: tuple[int, int]) -> None:
             new_position = (self.position[0] + direction[0], self.position[1] + direction[1])
@@ -39,6 +41,13 @@ class GameLogic:
         def move_down(self) -> None: self._move((0, 1))
         def move_left(self) -> None: self._move((-1, 0))
         def move_right(self) -> None: self._move((1, 0))
+
+        @property
+        def health(self) -> int:
+            return self._health
+        @property
+        def energy(self) -> int:
+            return self._energy
 
         def reduce_health(self, amount: int) -> None: self._health = max(0, self._health - amount)
         def reduce_energy(self, amount: int) -> None: self._energy = max(0, self._energy - amount)
