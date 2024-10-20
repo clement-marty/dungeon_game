@@ -18,10 +18,13 @@ class _Texture:
         
 class _UI_Icon:
     def __init__(self, icon_filename: str) -> None:
-        self.icon_file = icon_filename
+        self.icon = pygame.image.load(icon_filename)
     
-    def get(self) -> pygame.Surface:
-        return pygame.transform.scale(self.icon_file, (32, 32))
+    def get(self, side_length: tuple[int, int] = None) -> pygame.Surface:
+        if side_length is None:
+            return self.icon
+        else:
+            return pygame.transform.scale(self.icon, size=(side_length, side_length))
 
 
 
@@ -54,7 +57,7 @@ class GameSprites:
     class ui:
 
         HEALTH_ICON = _UI_Icon('assets/ui/health_icon.png')
-        ENERGY_ICON = _UI_Icon('assets/ui')
+        ENERGY_ICON = _UI_Icon('assets/ui/energy_icon.png')
 
 
     @classmethod
