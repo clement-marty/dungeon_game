@@ -88,8 +88,13 @@ class Renderer:
             energy_background.height
         )
 
-        for rect, color in zip(
-                [health_background, energy_background, health_bar, energy_bar],
-                [cls.UI_BACKGROUND_COLOR, cls.UI_BACKGROUND_COLOR, cls.UI_HEALTH_BAR_COLOR, cls.UI_ENERGY_BAR_COLOR]
+        for rect in [health_background, energy_background]:
+            pygame.draw.rect(surface=screen, color=cls.UI_BACKGROUND_COLOR, rect=rect)
+
+        for rect, color, icon in zip(
+                [health_bar, energy_bar],
+                [cls.UI_HEALTH_BAR_COLOR, cls.UI_ENERGY_BAR_COLOR],
+                [GameSprites.ui.HEALTH_ICON, GameSprites.ui.ENERGY_ICON]
             ):
             pygame.draw.rect(surface=screen, color=color, rect=rect)
+            screen.blit(icon.get(side_length=rect.height), rect)
