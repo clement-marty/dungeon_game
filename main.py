@@ -69,6 +69,7 @@ while running:
     screen.fill((0, 0, 0))
 
     Renderer.render_scene(screen=screen, player_position=PLAYER.position)
+    Renderer.render_ui(screen=screen, player=PLAYER)
 
     # Draws the player as a red circle (TODO: add a player texture and implement its drawing in scripts.renderer)
     pygame.draw.circle(screen, (255, 0, 0), (SCREEN_SIZE[0]*TILE_SIZE//2, SCREEN_SIZE[1]*TILE_SIZE//2), int(TILE_SIZE*40/100))
