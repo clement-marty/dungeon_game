@@ -52,9 +52,9 @@ class Renderer:
         rendered_obstacles = cls.OBSTACLES_VMATRIX[splitter[0]:splitter[1], splitter[2]:splitter[3]]
         for x in range(rendered_tiles.shape[0]):
             for y in range(rendered_tiles.shape[1]):
-                texture, vmatrix = (GameSprites.ROOM_TEXTURE, cls.ROOM_VMATRIX) if rendered_tiles[x, y] == 1 else \
-                                (GameSprites.CORRIDOR_TEXTURE, cls.CORRIDOR_VMATRIX) if rendered_tiles[x, y] == 2 else \
-                                (GameSprites.WALL_TEXTURE, cls.WALL_VMATRIX)
+                texture, vmatrix = (GameSprites.tiles.ROOM, cls.ROOM_VMATRIX) if rendered_tiles[x, y] == 1 else \
+                                (GameSprites.tiles.CORRIDOR, cls.CORRIDOR_VMATRIX) if rendered_tiles[x, y] == 2 else \
+                                (GameSprites.tiles.WALL, cls.WALL_VMATRIX)
                 screen.blit(
                     texture.get_variant(vmatrix[x + splitter[0], y + splitter[2]]),
                     (x * cls.TILE_SIZE, y * cls.TILE_SIZE)
