@@ -2,6 +2,7 @@ import pygame
 import numpy as np
 
 from scripts.textures import GameSprites
+from scripts.game_logic import GameLogic
 
 
 class Renderer:
@@ -13,6 +14,10 @@ class Renderer:
     CORRIDOR_VMATRIX: np.ndarray
     OBSTACLES_VMATRIX: np.ndarray
     VMATRIX_PADDING: int
+
+    UI_BACKGROUND_COLOR: tuple[int, int, int] = (150, 150, 150)
+    UI_HEALTH_BAR_COLOR: tuple[int, int, int] = (255, 50, 50)
+    UI_ENERGY_BAR_COLOR: tuple[int, int, int] = (100, 100, 255)
 
     @classmethod
     def init(cls, screen_size: tuple[int, int],
@@ -60,3 +65,31 @@ class Renderer:
                         screen.blit(
                             rendered_obstacles[x, y][0].get_variant(rendered_obstacles[x, y][1]), (x * cls.TILE_SIZE, y * cls.TILE_SIZE)
                         )
+    
+    @classmethod
+    def render_ui(cls, screen: pygame.Surface, player: GameLogic.Player) -> None:
+        x_pixels, y_pixels = cls.SCREEN_SIZE[0] * cls.TILE_SIZE, cls.SCREEN_SIZE[1] * cls.TILE_SIZE
+
+        rect_size = (int(x_pixels * .3), int(y_pixels * .05))
+        margin = int(y_pixels * .05)
+
+        health_background = pygame.Rect(margin, y_pixels - margin - rect_size[1], *rect_size)
+        energy_background = pygame.Rect(x_pixels - margin - rect_size[0], y_pixels - margin - rect_size[1], *rect_size)
+        health_bar = pygame.Rect(
+            health_background.left, 
+            health_background.top,
+            int(health_background.width * player.health / player.max_health),
+            health_background.height
+        )
+        energy_bar = pygame.Rect(
+            energy_background.left,
+            energy_background.top,
+            int(energy_background.width * player.energy / player.max_energy),
+            energy_background.height
+        )
+
+        for rect, color in zip(
+                [health_background, energy_background, health_bar, energy_bar],
+                [cls.UI_BACKGROUND_COLOR, cls.UI_BACKGROUND_COLOR, cls.UI_HEALTH_BAR_COLOR, cls.UI_ENERGY_BAR_COLOR]
+            ):
+            pygame.draw.rect(surface=screen, color=color, rect=rect)
