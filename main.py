@@ -2,8 +2,6 @@ import pygame
 
 from scripts.dungeon_generation import BSPAlgorithm
 from scripts.textures import GameSprites
-from scripts.textures import variant_matrix
-from scripts.textures import object_variant_matrix
 from scripts.renderer import Renderer
 from scripts.game_logic import GameLogic
 
@@ -18,10 +16,10 @@ screen = pygame.display.set_mode((SCREEN_SIZE[0] * TILE_SIZE, SCREEN_SIZE[1] * T
 clock = pygame.time.Clock()
 running = True
 
-WALL_VMATRIX = variant_matrix(size=DUNGEON_SIZE, variants=GameSprites.tiles.WALL.variants, random_seed=RANDOM_SEED + 2)
-ROOM_VMATRIX = variant_matrix(size=DUNGEON_SIZE, variants=GameSprites.tiles.ROOM.variants, random_seed=RANDOM_SEED)
-CORRIDOR_VMATRIX = variant_matrix(size=DUNGEON_SIZE, variants=GameSprites.tiles.CORRIDOR.variants, random_seed=RANDOM_SEED + 1)
-OBSTACLES_VMATRIX = object_variant_matrix(size=DUNGEON_SIZE, object_textures=[GameSprites.tiles.CRATE], random_seed=RANDOM_SEED + 3)
+WALL_VMATRIX = GameSprites.variant_matrix(size=DUNGEON_SIZE, variants=GameSprites.tiles.WALL.variants, random_seed=RANDOM_SEED + 2)
+ROOM_VMATRIX = GameSprites.variant_matrix(size=DUNGEON_SIZE, variants=GameSprites.tiles.ROOM.variants, random_seed=RANDOM_SEED)
+CORRIDOR_VMATRIX = GameSprites.variant_matrix(size=DUNGEON_SIZE, variants=GameSprites.tiles.CORRIDOR.variants, random_seed=RANDOM_SEED + 1)
+OBSTACLES_VMATRIX = GameSprites.object_variant_matrix(size=DUNGEON_SIZE, object_textures=[GameSprites.tiles.CRATE], random_seed=RANDOM_SEED + 3)
 
 
 DUNGEON_GRID, ROOMS = BSPAlgorithm.generate(

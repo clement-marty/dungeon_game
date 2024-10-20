@@ -28,8 +28,8 @@ class GameLogic:
             self.position: list[int, int]
             self.max_health = max_health
             self.max_energy = max_energy
-            self._health = max_health - 20
-            self._energy = max_energy - 50
+            self._health = max_health
+            self._energy = max_energy
 
         def _move(self, direction: tuple[int, int]) -> None:
             new_position = (self.position[0] + direction[0], self.position[1] + direction[1])
