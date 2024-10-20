@@ -13,6 +13,7 @@ class Renderer:
     ROOM_VMATRIX: np.ndarray
     CORRIDOR_VMATRIX: np.ndarray
     OBSTACLES_VMATRIX: np.ndarray
+    DECORATION_VMATRIX: np.ndarray
     VMATRIX_PADDING: int
 
     UI_BACKGROUND_COLOR: tuple[int, int, int] = (150, 150, 150)
@@ -27,6 +28,7 @@ class Renderer:
              room_vmatrix: np.ndarray,
              corridor_vmatrix: np.ndarray,
              obstacles_vmatrix: np.ndarray,
+             decoration_vmatrix: np.ndarray,
              *args, **kwargs) -> None:
         cls.SCREEN_SIZE = screen_size
         cls.TILE_SIZE = tile_size
@@ -38,6 +40,7 @@ class Renderer:
         cls.ROOM_VMATRIX = np.pad(room_vmatrix, (cls.VMATRIX_PADDING,), mode='constant', constant_values=0)
         cls.CORRIDOR_VMATRIX = np.pad(corridor_vmatrix, (cls.VMATRIX_PADDING,), mode='constant', constant_values=0)
         cls.OBSTACLES_VMATRIX = np.pad(obstacles_vmatrix, ([cls.VMATRIX_PADDING]*2, [cls.VMATRIX_PADDING]*2, [0]*2), mode='constant', constant_values=(None, None))
+        cls.DECORATION_VMATRIX = np.pad(decoration_vmatrix, ([cls.VMATRIX_PADDING]*2, [cls.VMATRIX_PADDING]*2, [0]*2), mode='constant', constant_values=(None, None))
 
     
     @classmethod
@@ -50,6 +53,7 @@ class Renderer:
         )
         rendered_tiles = cls.DUNGEON_GRID[splitter[0]:splitter[1], splitter[2]:splitter[3]]
         rendered_obstacles = cls.OBSTACLES_VMATRIX[splitter[0]:splitter[1], splitter[2]:splitter[3]]
+        rendered_decoration = cls.DECORATION_VMATRIX[splitter[0]:splitter[1], splitter[2]:splitter[3]]
         for x in range(rendered_tiles.shape[0]):
             for y in range(rendered_tiles.shape[1]):
                 texture, vmatrix = (GameSprites.tiles.ROOM, cls.ROOM_VMATRIX) if rendered_tiles[x, y] == 1 else \
@@ -60,11 +64,17 @@ class Renderer:
                     (x * cls.TILE_SIZE, y * cls.TILE_SIZE)
                 )
 
-                if rendered_tiles[x, y] == 1 :
-                    if rendered_obstacles[x, y][0] is not None:
-                        screen.blit(
-                            rendered_obstacles[x, y][0].get_variant(rendered_obstacles[x, y][1]), (x * cls.TILE_SIZE, y * cls.TILE_SIZE)
-                        )
+                if rendered_tiles[x, y] == 1 and rendered_obstacles[x, y][0] is not None:
+                    screen.blit(
+                        rendered_obstacles[x, y][0].get_variant(rendered_obstacles[x, y][1]), (x * cls.TILE_SIZE, y * cls.TILE_SIZE)
+                    )
+                
+                elif rendered_tiles[x, y] != 0 and rendered_decoration[x, y][0] is not None:
+                    screen.blit(
+                        rendered_decoration[x, y][0].get_variant(rendered_decoration[x, y][1]), (x * cls.TILE_SIZE, y * cls.TILE_SIZE)
+                    )
+                
+
     
     @classmethod
     def render_ui(cls, screen: pygame.Surface, player: GameLogic.Player) -> None:

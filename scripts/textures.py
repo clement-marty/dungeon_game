@@ -53,6 +53,11 @@ class GameSprites:
             'assets/objects/crate_tile_4.png'
         ])
 
+        BONES = _Texture([
+            'assets/decoration/bones_1.png',
+            'assets/decoration/bones_2.png'
+        ])
+
 
     class ui:
 
