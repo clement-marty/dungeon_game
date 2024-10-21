@@ -13,8 +13,8 @@ class _Texture:
     def variants(self) -> int:
         return len(self.texture_images)
 
-    def get_variant(self, variant_id: int) -> pygame.Surface:
-        return pygame.transform.scale(self.texture_images[variant_id], (64, 64))
+    def get_variant(self, variant_id: int, tile_size: int) -> pygame.Surface:
+        return pygame.transform.scale(self.texture_images[variant_id], (tile_size, tile_size))
         
 class _UI_Icon:
     def __init__(self, icon_filename: str) -> None:

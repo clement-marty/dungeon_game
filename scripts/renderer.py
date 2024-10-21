@@ -60,18 +60,18 @@ class Renderer:
                                 (GameSprites.tiles.CORRIDOR, cls.CORRIDOR_VMATRIX) if rendered_tiles[x, y] == 2 else \
                                 (GameSprites.tiles.WALL, cls.WALL_VMATRIX)
                 screen.blit(
-                    texture.get_variant(vmatrix[x + splitter[0], y + splitter[2]]),
+                    texture.get_variant(vmatrix[x + splitter[0], y + splitter[2]], cls.TILE_SIZE),
                     (x * cls.TILE_SIZE, y * cls.TILE_SIZE)
                 )
 
                 if rendered_tiles[x, y] == 1 and rendered_obstacles[x, y][0] is not None:
                     screen.blit(
-                        rendered_obstacles[x, y][0].get_variant(rendered_obstacles[x, y][1]), (x * cls.TILE_SIZE, y * cls.TILE_SIZE)
+                        rendered_obstacles[x, y][0].get_variant(rendered_obstacles[x, y][1], cls.TILE_SIZE), (x * cls.TILE_SIZE, y * cls.TILE_SIZE)
                     )
                 
                 elif rendered_tiles[x, y] != 0 and rendered_decoration[x, y][0] is not None:
                     screen.blit(
-                        rendered_decoration[x, y][0].get_variant(rendered_decoration[x, y][1]), (x * cls.TILE_SIZE, y * cls.TILE_SIZE)
+                        rendered_decoration[x, y][0].get_variant(rendered_decoration[x, y][1], cls.TILE_SIZE), (x * cls.TILE_SIZE, y * cls.TILE_SIZE)
                     )
                 
 
