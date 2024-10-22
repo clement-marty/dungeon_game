@@ -6,6 +6,7 @@ from scripts.game_logic import GameLogic
 
 
 class Renderer:
+    SCREEN: pygame.Surface
     SCREEN_SIZE: tuple[int, int]
     TILE_SIZE: int
     DUNGEON_GRID: np.ndarray
@@ -21,7 +22,8 @@ class Renderer:
     UI_ENERGY_BAR_COLOR: tuple[int, int, int] = (100, 100, 255)
 
     @classmethod
-    def init(cls, screen_size: tuple[int, int],
+    def init(cls, screen: pygame.Surface,
+             screen_size: tuple[int, int],
              tile_size: int,
              dungeon_grid: np.ndarray,
              wall_vmatrix: np.ndarray,
@@ -30,6 +32,7 @@ class Renderer:
              obstacles_vmatrix: np.ndarray,
              decoration_vmatrix: np.ndarray,
              *args, **kwargs) -> None:
+        cls.SCREEN = screen
         cls.SCREEN_SIZE = screen_size
         cls.TILE_SIZE = tile_size
 
@@ -44,7 +47,7 @@ class Renderer:
 
     
     @classmethod
-    def render_scene(cls, screen: pygame.Surface, player_position: tuple[int, int]) -> None:
+    def render_scene(cls, player_position: tuple[int, int]) -> None:
         x_offset, y_offset = cls.SCREEN_SIZE[0] // 2, cls.SCREEN_SIZE[1] // 2
 
         splitter = (
@@ -59,25 +62,25 @@ class Renderer:
                 texture, vmatrix = (GameSprites.tiles.ROOM, cls.ROOM_VMATRIX) if rendered_tiles[x, y] == 1 else \
                                 (GameSprites.tiles.CORRIDOR, cls.CORRIDOR_VMATRIX) if rendered_tiles[x, y] == 2 else \
                                 (GameSprites.tiles.WALL, cls.WALL_VMATRIX)
-                screen.blit(
+                cls.SCREEN.blit(
                     texture.get_variant(vmatrix[x + splitter[0], y + splitter[2]], cls.TILE_SIZE),
                     (x * cls.TILE_SIZE, y * cls.TILE_SIZE)
                 )
 
                 if rendered_tiles[x, y] == 1 and rendered_obstacles[x, y][0] is not None:
-                    screen.blit(
+                    cls.SCREEN.blit(
                         rendered_obstacles[x, y][0].get_variant(rendered_obstacles[x, y][1], cls.TILE_SIZE), (x * cls.TILE_SIZE, y * cls.TILE_SIZE)
                     )
                 
                 elif rendered_tiles[x, y] != 0 and rendered_decoration[x, y][0] is not None:
-                    screen.blit(
+                    cls.SCREEN.blit(
                         rendered_decoration[x, y][0].get_variant(rendered_decoration[x, y][1], cls.TILE_SIZE), (x * cls.TILE_SIZE, y * cls.TILE_SIZE)
                     )
                 
 
     
     @classmethod
-    def render_ui(cls, screen: pygame.Surface, player: GameLogic.Player) -> None:
+    def render_ui(cls, player: GameLogic.Player) -> None:
         x_pixels, y_pixels = cls.SCREEN_SIZE[0] * cls.TILE_SIZE, cls.SCREEN_SIZE[1] * cls.TILE_SIZE
 
         rect_size = (int(x_pixels * .3), int(y_pixels * .05))
@@ -99,12 +102,12 @@ class Renderer:
         )
 
         for rect in [health_background, energy_background]:
-            pygame.draw.rect(surface=screen, color=cls.UI_BACKGROUND_COLOR, rect=rect)
+            pygame.draw.rect(surface=cls.SCREEN, color=cls.UI_BACKGROUND_COLOR, rect=rect)
 
         for rect, color, icon in zip(
                 [health_bar, energy_bar],
                 [cls.UI_HEALTH_BAR_COLOR, cls.UI_ENERGY_BAR_COLOR],
                 [GameSprites.ui.HEALTH_ICON, GameSprites.ui.ENERGY_ICON]
             ):
-            pygame.draw.rect(surface=screen, color=color, rect=rect)
-            screen.blit(icon.get(side_length=rect.height), rect)
+            pygame.draw.rect(surface=cls.SCREEN, color=color, rect=rect)
+            cls.SCREEN.blit(icon.get(side_length=rect.height), rect)
