@@ -1,3 +1,4 @@
+import random
 import numpy as np
 
 
@@ -30,10 +31,13 @@ class GameLogic:
             self.max_health = max_health
             self.health = max_health
 
+        def _can_move_to(self, position: tuple[int, int]) -> bool:
+            return GameLogic.DUNGEON_GRID[*position] != 0 and\
+                (GameLogic.OBSTACLES_VMATRIX[*position][0] is None or GameLogic.DUNGEON_GRID[*position] != 1)
+
         def _move(self, direction: tuple[int, int]) -> None:
             new_position = (self.position[0] + direction[0], self.position[1] + direction[1])
-            if GameLogic.DUNGEON_GRID[*new_position] != 0 and \
-                (GameLogic.OBSTACLES_VMATRIX[*new_position][0] is None or GameLogic.DUNGEON_GRID[*new_position] != 1):
+            if self._can_move_to(new_position):
                 self.position = new_position
 
         @property
@@ -58,3 +62,23 @@ class GameLogic:
         def energy(self) -> int:
             return self._energy
         def reduce_energy(self, amount: int) -> None: self._energy = max(0, self._energy - amount)
+    
+
+    class Enemy(Entity):
+
+        def __init__(self, max_health: int, starting_position: tuple[int, int]):
+            super().__init__(max_health)
+            self.position = starting_position
+        
+        def move(self, random_seed: int = None) -> None:
+            directions = [(1, 0), (-1, 0), (0, 1), (0, -1)]
+            if random_seed:
+                random.seed(random_seed)
+            random.shuffle(directions)
+            i = 0
+            while i < len(directions) and not self._can_move_to(directions[i]):
+                i += 1
+            
+            if i != len(directions): # i == len(directions) ==> while loop has not found a direction that the enemy can move to
+                self._move(direction=directions[i])
+
