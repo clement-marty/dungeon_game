@@ -9,19 +9,32 @@ class GameLogic:
     CORRIDOR_VMATRIX: np.ndarray
     OBSTACLES_VMATRIX: np.ndarray
 
+    ENEMIES: 'list[GameLogic.Enemy]'
+    PLAYER: 'GameLogic.Player'
+
     @classmethod
     def init(cls, dungeon_grid: np.ndarray,
              wall_vmatrix: np.ndarray,
              room_vmatrix: np.ndarray,
              corridor_vmatrix: np.ndarray,
              obstacles_vmatrix: np.ndarray,
-             *args, **kwargs) -> None:
+             *args, **kwargs) -> tuple:
         cls.DUNGEON_GRID = dungeon_grid
         cls.WALL_VMATRIX = wall_vmatrix
         cls.ROOM_VMATRIX = room_vmatrix
         cls.CORRIDOR_VMATRIX = corridor_vmatrix
         cls.OBSTACLES_VMATRIX = obstacles_vmatrix
 
+        cls.PLAYER = cls.Player()
+        cls.ENEMIES = []
+        return cls.PLAYER, cls.ENEMIES
+
+    @classmethod
+    def _positions(cls, entities: 'list[GameLogic.Entity]') -> list[tuple[int, int]]:
+        pos = []
+        for e in entities:
+            pos.append(e.position)
+        return pos
 
 
     class Entity:
@@ -29,11 +42,13 @@ class GameLogic:
         def __init__(self, max_health: int) -> None:
             self.position: list[int, int]
             self.max_health = max_health
-            self.health = max_health
+            self._health = max_health
 
         def _can_move_to(self, position: tuple[int, int]) -> bool:
             return GameLogic.DUNGEON_GRID[*position] != 0 and\
-                (GameLogic.OBSTACLES_VMATRIX[*position][0] is None or GameLogic.DUNGEON_GRID[*position] != 1)
+                (GameLogic.OBSTACLES_VMATRIX[*position][0] is None or GameLogic.DUNGEON_GRID[*position] != 1) and\
+                position not in GameLogic._positions(GameLogic.ENEMIES) and\
+                position != GameLogic.PLAYER.position
 
         def _move(self, direction: tuple[int, int]) -> None:
             new_position = (self.position[0] + direction[0], self.position[1] + direction[1])

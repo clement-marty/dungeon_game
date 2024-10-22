@@ -41,11 +41,7 @@ init_config = {
     "decoration_vmatrix": DECORATION_VMATRIX
 }
 Renderer.init(**init_config)
-GameLogic.init(**init_config)
-
-
-PLAYER = GameLogic.Player()
-
+PLAYER, ENEMIES = GameLogic.init(**init_config)
 
 # Compute the area of all rooms to find the smallest one and the greatest one
 areas = [room[2]*room[3] for room in ROOMS]
