@@ -76,7 +76,12 @@ class Renderer:
                     cls.SCREEN.blit(
                         rendered_decoration[x, y][0].get_variant(rendered_decoration[x, y][1], cls.TILE_SIZE), (x * cls.TILE_SIZE, y * cls.TILE_SIZE)
                     )
-                
+
+
+
+    @classmethod
+    def render_entities(cls, entities: list[GameLogic.Entity]) -> None:
+        raise NotImplementedError()
 
     
     @classmethod
