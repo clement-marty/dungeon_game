@@ -48,7 +48,9 @@ PLAYER, ENEMIES = GameLogic.init(**init_config)
 areas = [room[2]*room[3] for room in ROOMS]
 spawn_room, exit_room = ROOMS[areas.index(min(areas))], ROOMS[areas.index(max(areas))]
 spawn_coords, exit_coords = (spawn_room[0] + spawn_room[2]//2, spawn_room[1] + spawn_room[3]//2), (exit_room[0] + exit_room[2]//2, exit_room[1] + exit_room[3]//2)
+
 PLAYER.position = spawn_coords
+GameLogic.instantiate_enemies(amount=50, random_seed=RANDOM_SEED + 5)
 
 while running:
 
