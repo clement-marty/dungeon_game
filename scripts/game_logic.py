@@ -1,6 +1,7 @@
 import random
 import numpy as np
 
+from scripts.textures import GameSprites
 
 class GameLogic:
     DUNGEON_GRID: np.ndarray
@@ -41,6 +42,8 @@ class GameLogic:
 
         def __init__(self, max_health: int) -> None:
             self.position: list[int, int]
+            self.texture: GameSprites._Texture
+            self.texture_variant = random.randint(0, self.texture.variants-1)
             self.max_health = max_health
             self._health = max_health
 
@@ -62,6 +65,7 @@ class GameLogic:
 
 
     class Player(Entity):
+        texture = GameSprites.entities.PLAYER
             
         def __init__(self, max_health: int = 100, max_energy: int = 100) -> None:
             super().__init__(max_health)
@@ -80,6 +84,7 @@ class GameLogic:
     
 
     class Enemy(Entity):
+        texture = GameSprites.entities.ENEMY
 
         def __init__(self, max_health: int, starting_position: tuple[int, int]):
             super().__init__(max_health)
