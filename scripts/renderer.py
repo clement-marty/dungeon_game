@@ -66,6 +66,8 @@ class Renderer:
                 
                 if not has_rendered_an_obstacle:
                     cls._render_decoration(x, y, rendered_tiles, rendered_decoration)
+        
+        cls._render_entities([GameLogic.PLAYER] + GameLogic.ENEMIES, splitter)
 
 
     @classmethod
@@ -100,8 +102,17 @@ class Renderer:
 
 
     @classmethod
-    def _render_entity(cls, entities: list[GameLogic.Entity]) -> None:
-        raise NotImplementedError()
+    def _render_entities(cls, entities: list[GameLogic.Entity], splitter: tuple) -> None:
+        splitter = (
+            splitter[0] - cls.VMATRIX_PADDING, splitter[1] - cls.VMATRIX_PADDING,
+            splitter[2] - cls.VMATRIX_PADDING, splitter[3] - cls.VMATRIX_PADDING
+        )
+        for entity in entities:
+            if entity.position[0] >= splitter[0] and entity.position[0] < splitter[1] and entity.position[1] >= splitter[2] and entity.position[1] < splitter[3]:
+                x, y = entity.position[0] - splitter[0], entity.position[1] - splitter[2]
+                cls.SCREEN.blit(
+                    entity.texture.get_variant(entity.texture_variant, cls.TILE_SIZE), (x * cls.TILE_SIZE, y * cls.TILE_SIZE)
+                )
 
     
     @classmethod
