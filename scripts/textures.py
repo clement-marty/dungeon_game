@@ -78,6 +78,15 @@ class GameSprites:
 
     @classmethod
     def variant_matrix(cls, size: tuple[int, int], variants: int, random_seed: int) -> np.ndarray:
+        '''Generates a matrix of texture variants.
+
+        This method generates a matrix of random integers representing different texture variants based on the given size and number of variants.
+
+        :param tuple[int, int] size: The size of the matrix to generate.
+        :param int variants: The number of texture variants.
+        :param int random_seed: The seed for the random number generator.
+        :return np.ndarray: A matrix of random integers representing texture variants.
+        '''
         if variants > 1:
             np.random.seed(random_seed)
             return np.random.randint(low=0, high=variants, size=size, dtype=int)
@@ -87,6 +96,16 @@ class GameSprites:
 
     @classmethod
     def object_variant_matrix(cls, size: tuple[int, int], object_textures: list[_Texture], random_seed: int, fill: float = 0.25) -> np.ndarray:
+        '''Generates a matrix of object texture variants.
+
+        This method generates a matrix of object texture variants based on the given size, list of object textures, and fill percentage.
+
+        :param tuple[int, int] size: The size of the matrix to generate.
+        :param list[_Texture] object_textures: The list of object textures.
+        :param int random_seed: The seed for the random number generator.
+        :param float fill: The fill percentage for the matrix.
+        :return np.ndarray: A matrix of object texture variants.
+        '''
         vmatrices = [cls.variant_matrix(size=size, variants=obj.variants, random_seed=random_seed) for obj in object_textures]
         fill_matrix = np.random.rand(*size)
         final_matrix = np.full(shape=(*size, 2), fill_value=(None, None))
