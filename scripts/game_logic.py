@@ -30,6 +30,33 @@ class GameLogic:
         cls.ENEMIES = []
         return cls.PLAYER, cls.ENEMIES
 
+
+    @classmethod
+    def instantiate_enemies(cls, amount: int, random_seed: int) -> None:
+        '''Instantiates a specified amount of enemies at random positions within the dungeon grid.
+
+        This method seeds the random number generator with the provided random_seed to ensure reproducibility.
+        It then generates random positions for the enemies, ensuring that they are placed on valid tiles
+        (where the dungeon grid value is 1), not on obstacles, and not on the player's position or any previously
+        used positions.
+
+        :param int amount: The number of enemies to instantiate.
+        :param int random_seed: The seed for the random number generator.
+        :return: None
+
+        :warning: This method should only be called after defining the PLAYER's position, as it uses the PLAYER's position
+                  to avoid placing enemies on the same tile.
+        '''
+        random.seed(random_seed)
+        used_positions = [cls.PLAYER.position]
+        for _ in range(amount):
+            x, y = random.randint(0, cls.DUNGEON_GRID.shape[0]-1), random.randint(0, cls.DUNGEON_GRID.shape[1]-1)
+            while cls.DUNGEON_GRID[x, y] != 1 or cls.OBSTACLES_VMATRIX[x, y][0] is not None or (x, y) in used_positions:
+                x, y = random.randint(0, cls.DUNGEON_GRID.shape[0]-1), random.randint(0, cls.DUNGEON_GRID.shape[1]-1)
+            cls.ENEMIES.append(cls.Enemy(max_health=100, starting_position=(x, y)))
+            used_positions.append((x, y))
+
+
     @classmethod
     def _positions(cls, entities: 'list[GameLogic.Entity]') -> list[tuple[int, int]]:
         pos = []
