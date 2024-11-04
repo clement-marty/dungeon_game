@@ -59,6 +59,17 @@ class GameSprites:
         ])
 
 
+    class entities:
+
+        PLAYER = _Texture([
+            'assets/entities/player_texture_placeholder.png',
+        ])
+
+        ENEMY = _Texture([
+            'assets/entities/enemy_texture_placeholder.png',
+        ])
+
+
     class ui:
 
         HEALTH_ICON = _UI_Icon('assets/ui/health_icon.png')
