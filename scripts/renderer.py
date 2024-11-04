@@ -32,6 +32,20 @@ class Renderer:
              obstacles_vmatrix: np.ndarray,
              decoration_vmatrix: np.ndarray,
              *args, **kwargs) -> None:
+        '''Initializes the renderer with the given parameters.
+
+        This method sets up the renderer by initializing the screen, tile size, and various matrices used for rendering the dungeon.
+
+        :param screen: The screen surface to render on.
+        :param int tile_size: The size of each tile in pixels.
+        :param np.ndarray dungeon_grid: The grid representing the dungeon layout.
+        :param np.ndarray wall_vmatrix: The matrix representing the walls.
+        :param np.ndarray room_vmatrix: The matrix representing the rooms.
+        :param np.ndarray corridor_vmatrix: The matrix representing the corridors.
+        :param np.ndarray obstacles_vmatrix: The matrix representing the obstacles.
+        :param np.ndarray decoration_vmatrix: The matrix representing the decorations.
+        :return: None
+        '''
         cls.SCREEN = screen
         cls.SCREEN_SIZE = screen_size
         cls.TILE_SIZE = tile_size
@@ -48,6 +62,14 @@ class Renderer:
     
     @classmethod
     def render_scene(cls, player_position: tuple[int, int]) -> None:
+        '''Renders the entire scene centered around the player's position.
+
+        This method calculates the visible area of the dungeon grid based on the player's position and the screen size.
+        It then renders the tiles, obstacles, decorations, and entities within this visible area.
+
+        :param tuple[int, int] player_position: The current position of the player in the dungeon grid.
+        :return: None
+        '''
         x_offset, y_offset = cls.SCREEN_SIZE[0] // 2, cls.SCREEN_SIZE[1] // 2
 
         splitter = (
@@ -72,6 +94,16 @@ class Renderer:
 
     @classmethod
     def _render_tile(cls, x: int, y: int, rendered_tiles: np.ndarray, splitter: tuple) -> None:
+        '''Renders a single tile at the specified position.
+
+        This method renders a tile at the given (x, y) position within the visible area of the dungeon grid.
+
+        :param int x: The x-coordinate of the tile.
+        :param int y: The y-coordinate of the tile.
+        :param np.ndarray rendered_tiles: The array of tiles to be rendered.
+        :param tuple splitter: The tuple defining the visible area of the dungeon grid.
+        :return: None
+        '''
         texture, vmatrix = (GameSprites.tiles.ROOM, cls.ROOM_VMATRIX) if rendered_tiles[x, y] == 1 else \
                                 (GameSprites.tiles.CORRIDOR, cls.CORRIDOR_VMATRIX) if rendered_tiles[x, y] == 2 else \
                                 (GameSprites.tiles.WALL, cls.WALL_VMATRIX)
@@ -83,6 +115,16 @@ class Renderer:
 
     @classmethod
     def _render_obstacle(cls, x: int, y: int, rendered_tiles: np.ndarray, rendered_obstacles: np.ndarray) -> bool:
+        '''Renders an obstacle at the specified position.
+
+        This method renders an obstacle at the given (x, y) position within the visible area of the dungeon grid.
+
+        :param int x: The x-coordinate of the obstacle.
+        :param int y: The y-coordinate of the obstacle.
+        :param np.ndarray rendered_tiles: The array of tiles to be rendered.
+        :param np.ndarray rendered_obstacles: The array of obstacles to be rendered.
+        :return bool: True if an obstacle was rendered, False otherwise.
+        '''
         obstacle: bool = rendered_tiles[x, y] == 1 and rendered_obstacles[x, y][0] is not None
         if obstacle:
             cls.SCREEN.blit(
@@ -93,6 +135,16 @@ class Renderer:
 
     @classmethod
     def _render_decoration(cls, x: int, y: int, rendered_tiles: np.ndarray, rendered_decoration: np.ndarray) -> bool:
+        '''Renders a decoration at the specified position.
+
+        This method renders a decoration at the given (x, y) position within the visible area of the dungeon grid.
+
+        :param int x: The x-coordinate of the decoration.
+        :param int y: The y-coordinate of the decoration.
+        :param np.ndarray rendered_tiles: The array of tiles to be rendered.
+        :param np.ndarray rendered_decoration: The array of decorations to be rendered.
+        :return bool: True if a decoration was rendered, False otherwise.
+        '''
         decoration = rendered_tiles[x, y] != 0 and rendered_decoration[x, y][0] is not None
         if decoration:
             cls.SCREEN.blit(
@@ -103,13 +155,22 @@ class Renderer:
 
     @classmethod
     def _render_entities(cls, entities: list[GameLogic.Entity], splitter: tuple) -> None:
-        splitter = (
+        '''Renders all entities within the visible area.
+
+        This method renders all entities within the visible area of the dungeon grid.
+
+        :param list[GameLogic.Entity] entities: The list of entities to be rendered.
+        :param tuple splitter: The tuple defining the visible area of the dungeon grid.
+        :return: None
+        '''
+        s = (
             splitter[0] - cls.VMATRIX_PADDING, splitter[1] - cls.VMATRIX_PADDING,
             splitter[2] - cls.VMATRIX_PADDING, splitter[3] - cls.VMATRIX_PADDING
         )
         for entity in entities:
-            if entity.position[0] >= splitter[0] and entity.position[0] < splitter[1] and entity.position[1] >= splitter[2] and entity.position[1] < splitter[3]:
-                x, y = entity.position[0] - splitter[0], entity.position[1] - splitter[2]
+            if entity.position[0] >= s[0] and entity.position[0] < s[1] and \
+                    entity.position[1] >= s[2] and entity.position[1] < s[3]:
+                x, y = entity.position[0] - s[0], entity.position[1] - s[2]
                 cls.SCREEN.blit(
                     entity.texture.get_variant(entity.texture_variant, cls.TILE_SIZE), (x * cls.TILE_SIZE, y * cls.TILE_SIZE)
                 )
