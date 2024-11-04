@@ -59,28 +59,48 @@ class Renderer:
         rendered_decoration = cls.DECORATION_VMATRIX[splitter[0]:splitter[1], splitter[2]:splitter[3]]
         for x in range(rendered_tiles.shape[0]):
             for y in range(rendered_tiles.shape[1]):
-                texture, vmatrix = (GameSprites.tiles.ROOM, cls.ROOM_VMATRIX) if rendered_tiles[x, y] == 1 else \
-                                (GameSprites.tiles.CORRIDOR, cls.CORRIDOR_VMATRIX) if rendered_tiles[x, y] == 2 else \
-                                (GameSprites.tiles.WALL, cls.WALL_VMATRIX)
-                cls.SCREEN.blit(
-                    texture.get_variant(vmatrix[x + splitter[0], y + splitter[2]], cls.TILE_SIZE),
-                    (x * cls.TILE_SIZE, y * cls.TILE_SIZE)
-                )
 
-                if rendered_tiles[x, y] == 1 and rendered_obstacles[x, y][0] is not None:
-                    cls.SCREEN.blit(
-                        rendered_obstacles[x, y][0].get_variant(rendered_obstacles[x, y][1], cls.TILE_SIZE), (x * cls.TILE_SIZE, y * cls.TILE_SIZE)
-                    )
+                cls._render_tile(x, y, rendered_tiles, splitter)
+
+                has_rendered_an_obstacle = cls._render_obstacle(x, y, rendered_tiles, rendered_obstacles)
                 
-                elif rendered_tiles[x, y] != 0 and rendered_decoration[x, y][0] is not None:
-                    cls.SCREEN.blit(
-                        rendered_decoration[x, y][0].get_variant(rendered_decoration[x, y][1], cls.TILE_SIZE), (x * cls.TILE_SIZE, y * cls.TILE_SIZE)
-                    )
-
+                if not has_rendered_an_obstacle:
+                    cls._render_decoration(x, y, rendered_tiles, rendered_decoration)
 
 
     @classmethod
-    def render_entities(cls, entities: list[GameLogic.Entity]) -> None:
+    def _render_tile(cls, x: int, y: int, rendered_tiles: np.ndarray, splitter: tuple) -> None:
+        texture, vmatrix = (GameSprites.tiles.ROOM, cls.ROOM_VMATRIX) if rendered_tiles[x, y] == 1 else \
+                                (GameSprites.tiles.CORRIDOR, cls.CORRIDOR_VMATRIX) if rendered_tiles[x, y] == 2 else \
+                                (GameSprites.tiles.WALL, cls.WALL_VMATRIX)
+        cls.SCREEN.blit(
+            texture.get_variant(vmatrix[x + splitter[0], y + splitter[2]], cls.TILE_SIZE),
+            (x * cls.TILE_SIZE, y * cls.TILE_SIZE)
+        )
+    
+
+    @classmethod
+    def _render_obstacle(cls, x: int, y: int, rendered_tiles: np.ndarray, rendered_obstacles: np.ndarray) -> bool:
+        obstacle: bool = rendered_tiles[x, y] == 1 and rendered_obstacles[x, y][0] is not None
+        if obstacle:
+            cls.SCREEN.blit(
+                rendered_obstacles[x, y][0].get_variant(rendered_obstacles[x, y][1], cls.TILE_SIZE), (x * cls.TILE_SIZE, y * cls.TILE_SIZE)
+            )
+        return obstacle
+    
+
+    @classmethod
+    def _render_decoration(cls, x: int, y: int, rendered_tiles: np.ndarray, rendered_decoration: np.ndarray) -> bool:
+        decoration = rendered_tiles[x, y] != 0 and rendered_decoration[x, y][0] is not None
+        if decoration:
+            cls.SCREEN.blit(
+                rendered_decoration[x, y][0].get_variant(rendered_decoration[x, y][1], cls.TILE_SIZE), (x * cls.TILE_SIZE, y * cls.TILE_SIZE)
+            )
+        return decoration
+
+
+    @classmethod
+    def _render_entity(cls, entities: list[GameLogic.Entity]) -> None:
         raise NotImplementedError()
 
     
