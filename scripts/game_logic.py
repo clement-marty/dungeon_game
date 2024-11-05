@@ -112,8 +112,11 @@ class GameLogic:
             self._energy = max_energy
 
         def _move(self, direction: tuple[int, int]) -> None:
-            super()._move(direction)
-            GameLogic.turn += 1
+            new_position = (self.position[0] + direction[0], self.position[1] + direction[1])
+            if self._can_move_to(new_position):
+                self.position = new_position
+                GameLogic.turn += 1
+                pygame.event.post(pygame.event.Event(GameLogic.NEW_TURN_EVENT))
 
         def move_up(self) -> None: self._move((0, -1))
         def move_down(self) -> None: self._move((0, 1))
