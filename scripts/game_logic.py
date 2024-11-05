@@ -13,6 +13,8 @@ class GameLogic:
     ENEMIES: 'list[GameLogic.Enemy]'
     PLAYER: 'GameLogic.Player'
 
+    turn: int = 0
+
     @classmethod
     def init(cls, dungeon_grid: np.ndarray,
              wall_vmatrix: np.ndarray,
@@ -98,6 +100,10 @@ class GameLogic:
             super().__init__(max_health)
             self.max_energy = max_energy
             self._energy = max_energy
+
+        def _move(self, direction: tuple[int, int]) -> None:
+            super()._move(direction)
+            GameLogic.turn += 1
 
         def move_up(self) -> None: self._move((0, -1))
         def move_down(self) -> None: self._move((0, 1))
