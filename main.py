@@ -22,6 +22,7 @@ CORRIDOR_VMATRIX = GameSprites.variant_matrix(size=DUNGEON_SIZE, variants=GameSp
 OBSTACLES_VMATRIX = GameSprites.object_variant_matrix(size=DUNGEON_SIZE, object_textures=[GameSprites.tiles.CRATE], random_seed=RANDOM_SEED + 3)
 DECORATION_VMATRIX = GameSprites.object_variant_matrix(size=DUNGEON_SIZE, object_textures=[GameSprites.tiles.BONES], random_seed=RANDOM_SEED + 4, fill=.02)
 
+NEW_TURN_EVENT = pygame.USEREVENT + 1
 
 DUNGEON_GRID, ROOMS = BSPAlgorithm.generate(
     dungeon_size=DUNGEON_SIZE,
@@ -39,7 +40,8 @@ init_config = {
     "room_vmatrix": ROOM_VMATRIX,
     "corridor_vmatrix": CORRIDOR_VMATRIX,
     "obstacles_vmatrix": OBSTACLES_VMATRIX,
-    "decoration_vmatrix": DECORATION_VMATRIX
+    "decoration_vmatrix": DECORATION_VMATRIX,
+    "new_turn_event": NEW_TURN_EVENT
 }
 Renderer.init(**init_config)
 PLAYER, ENEMIES = GameLogic.init(**init_config)
