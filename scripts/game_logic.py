@@ -1,3 +1,4 @@
+import pygame
 import random
 import numpy as np
 
@@ -9,6 +10,7 @@ class GameLogic:
     ROOM_VMATRIX: np.ndarray
     CORRIDOR_VMATRIX: np.ndarray
     OBSTACLES_VMATRIX: np.ndarray
+    NEW_TURN_EVENT: int
 
     ENEMIES: 'list[GameLogic.Enemy]'
     PLAYER: 'GameLogic.Player'
@@ -21,12 +23,14 @@ class GameLogic:
              room_vmatrix: np.ndarray,
              corridor_vmatrix: np.ndarray,
              obstacles_vmatrix: np.ndarray,
+             new_turn_event: int,
              *args, **kwargs) -> tuple:
         cls.DUNGEON_GRID = dungeon_grid
         cls.WALL_VMATRIX = wall_vmatrix
         cls.ROOM_VMATRIX = room_vmatrix
         cls.CORRIDOR_VMATRIX = corridor_vmatrix
         cls.OBSTACLES_VMATRIX = obstacles_vmatrix
+        cls.NEW_TURN_EVENT = new_turn_event
 
         cls.PLAYER = cls.Player()
         cls.ENEMIES = []
