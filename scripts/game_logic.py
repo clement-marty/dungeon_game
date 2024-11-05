@@ -129,7 +129,7 @@ class GameLogic:
                 random.seed(random_seed)
             random.shuffle(directions)
             i = 0
-            while i < len(directions) and not self._can_move_to(directions[i]):
+            while i < len(directions) and not self._can_move_to((self.position[0] + directions[i][0], self.position[1] + directions[i][1])):
                 i += 1
             
             if i != len(directions): # i == len(directions) ==> while loop has not found a direction that the enemy can move to
