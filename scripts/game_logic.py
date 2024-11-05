@@ -69,6 +69,12 @@ class GameLogic:
         for e in entities:
             pos.append(e.position)
         return pos
+    
+    
+    @classmethod
+    def process_enemy_movements(cls, enemies: 'list[GameLogic.Enemy]', random_seed: int) -> None:
+        for i in range(len(enemies)):
+            enemies[i].move(random_seed=random_seed * cls.turn * i)
 
 
     class Entity:
