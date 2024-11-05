@@ -65,6 +65,9 @@ while running:
             if event.key == pygame.K_d: PLAYER.move_right()
             if event.key == pygame.K_z: PLAYER.move_up()
             if event.key == pygame.K_s: PLAYER.move_down()
+        
+        if event.type == NEW_TURN_EVENT:
+            GameLogic.process_enemy_movements(enemies=ENEMIES, random_seed=RANDOM_SEED + 6)
 
 
     screen.fill((0, 0, 0))
