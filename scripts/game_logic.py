@@ -73,6 +73,11 @@ class GameLogic:
     
     @classmethod
     def process_enemy_movements(cls, enemies: 'list[GameLogic.Enemy]', random_seed: int) -> None:
+        '''Processes the movements of a list of enemies.
+
+        :param list[GameLogic.Enemy] enemies: A list of Enemy objects to be moved.
+        :param int random_seed: A seed value used to influence the randomness of enemy movements.
+        '''
         for i in range(len(enemies)):
             enemies[i].move(random_seed=random_seed * cls.turn * i)
 
@@ -87,12 +92,21 @@ class GameLogic:
             self._health = max_health
 
         def _can_move_to(self, position: tuple[int, int]) -> bool:
+            '''Determines if the entity can move to the specified position.
+
+            :param tuple[int, int] position: The target position to move to.
+            :return bool: True if the entity can move to the position, False otherwise.
+            '''
             return GameLogic.DUNGEON_GRID[*position] != 0 and\
                 (GameLogic.OBSTACLES_VMATRIX[*position][0] is None or GameLogic.DUNGEON_GRID[*position] != 1) and\
                 position not in GameLogic._positions(GameLogic.ENEMIES) and\
                 position != GameLogic.PLAYER.position
 
         def _move(self, direction: tuple[int, int]) -> None:
+            '''Moves the entity in the specified direction if possible.
+
+            :param tuple[int, int] direction: The direction to move in.
+            '''
             new_position = (self.position[0] + direction[0], self.position[1] + direction[1])
             if self._can_move_to(new_position):
                 self.position = new_position
@@ -137,6 +151,10 @@ class GameLogic:
             self.position = starting_position
         
         def move(self, random_seed: int = None) -> None:
+            '''Moves the enemy in a random direction if possible.
+
+            :param int random_seed: The seed for the random number generator
+            '''
             directions = [(1, 0), (-1, 0), (0, 1), (0, -1)]
             if random_seed:
                 random.seed(random_seed)
