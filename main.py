@@ -10,7 +10,7 @@ from scripts.game_logic import GameLogic
 SCREEN_SIZE: tuple[int, int] = (15, 9) # The size of the screen, in game tiles. Both numbers should be odd
 TILE_SIZE: int = 64 # The side length, in pixels, of each game tile rendered on screen
 DUNGEON_SIZE: tuple[int, int] = 100, 75 # The size, in tiles, of the game's dungeon
-RANDOM_SEED: int = time.time() # The random seed used to generate the dungeon
+RANDOM_SEED: int = int(time.time()) # The random seed used to generate the dungeon
 
 pygame.init()
 screen = pygame.display.set_mode((SCREEN_SIZE[0] * TILE_SIZE, SCREEN_SIZE[1] * TILE_SIZE))
